@@ -1,6 +1,6 @@
 SHELL := /bin/sh
-CC := $(CROSS_COMPILE)gcc
-CFLAGS := -Wall -Werror
+CC ?= $(CROSS_COMPILE)gcc
+CFLAGS ?= -Wall -Werror -Og -ggdb
 TARGET := aesdsocket
 SRC := aesdsocket.c
 OBJ := $(SRC:.c=.o)
@@ -10,7 +10,7 @@ DESTDIR := $(dirname $0)/..
 all default: $(TARGET)
 
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -18,3 +18,7 @@ $(TARGET): $(OBJ)
 .PHONY: clean
 clean:
 	rm -f $(TARGET) $(OBJ)
+
+.PHONY: install
+install:
+	mv $(TARGET) $(DESTDIR)/server
